@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "Bumble Extension",
+    "version": "1.0",
+    "description": "A modern chrome extension for automation of swiping and messaging on Bumble",
+    "permissions": [
+    "activeTab", 
+    "storage", 
+    "scripting"
+    ],
+
+    "action": {
+        "default_popup": "popup.html"
+    },
+
+    "background": {
+        "service_worker": "background.js"
+    }
+}
