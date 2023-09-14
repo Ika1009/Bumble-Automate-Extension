@@ -1,26 +1,54 @@
-const toggleSwitch = document.getElementById("toggleSwitch");
-const messageCount = document.getElementById("messageCount");
-const swipeTime = document.getElementById("swipeTime");
+const toggle = document.getElementById("toggleSwitch");
+    
+toggle.addEventListener('click', toggleSwitch);
 
-toggleSwitch.addEventListener("click", function() {
-    if (toggleSwitch.classList.contains("active")) {
-        toggleSwitch.classList.remove("active");
-        messageCount.disabled = false;
-        swipeTime.disabled = true;
+let swipeIsEnabled = false;  // Default state: "People to Message" is enabled
+
+function toggleSwitch() {
+    const toggle = document.getElementById("toggleSwitch");
+    const messageInput = document.getElementById("messageCount");
+    const messageLabel = document.getElementById("messageLabel");
+    const swipeInput = document.getElementById("swipeTime");
+    const swipeLabel = document.getElementById("swipeLabel");
+
+    if (swipeIsEnabled) {
+        // When swipe is currently enabled:
+        // Disable the "Seconds to Swipe" input and label
+        swipeInput.disabled = true;
+        swipeLabel.classList.add('disabled-label');
+
+        // Enable the "People to Message" input and label
+        messageInput.disabled = false;
+        messageLabel.classList.remove('disabled-label');
+        
+        toggle.classList.remove('active');
     } else {
-        toggleSwitch.classList.add("active");
-        messageCount.disabled = true;
-        swipeTime.disabled = false;
+        // When swipe is currently disabled:
+        // Enable the "Seconds to Swipe" input and label
+        swipeInput.disabled = false;
+        swipeLabel.classList.remove('disabled-label');
+
+        // Disable the "People to Message" input and label
+        messageInput.disabled = true;
+        messageLabel.classList.add('disabled-label');
+
+        toggle.classList.add('active');
     }
-});
+
+    // Toggle the swipeIsEnabled value for the next time the function runs
+    swipeIsEnabled = !swipeIsEnabled;
+}
+
 
 document.getElementById("startAction").addEventListener("click", function() {
     const messageCountVal = messageCount.value;
     const swipeTimeVal = swipeTime.value;
 
-    if ((messageCountVal && !swipeTime.disabled) || (swipeTimeVal && !messageCount.disabled)) {
-        // Pass these values to your background script or content script
-        chrome.runtime.sendMessage({action: "startSwiping", time: swipeTimeVal, count: messageCountVal});
+    if (messageCountVal && !swipeIsEnabled) {
+        chrome.runtime.sendMessage({action: "startMessaging", count: messageCountVal});
+    }
+    else if(swipeTimeVal && swipeIsEnabled){
+        chrome.runtime.sendMessage({action: "startSwiping", time: swipeTimeVal});
     } else {
         alert("Please fill in the active field!");
     }
