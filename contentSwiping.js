@@ -1,24 +1,41 @@
+let time;
+let percentage;
+let started = false;
+let startTime;
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "initiateSwiping") {
-        startSwiping(request.time, request.percentage);
+        time = request.time;
+        percentage = request.percentage;
+        startTime = Date.now();
+
+        //Start function if the first time
+        if(!started) startSwiping()
+    }    
+    else if (request.action === "checkScriptPresence" && request.scriptName === "swipingScript") {
+        sendResponse({ scriptPresent: true });
     }
 });
 
-function startSwiping(time, percentage) {
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+async function startSwiping() {
+    started=true;
     // Your swiping logic here
     console.log("Swiping for: ", time, " seconds with percentage: ", percentage);
 
     // Example pseudo-code:
-    // let endTime = Date.now() + (time * 1000);
-    // while (Date.now() < endTime) {
-    //     if (randomPercentage() < percentage) {
-    //         performSwipe();
-    //     }
-    //     waitSomeTime();
-    // }
+    while (Date.now() < startTime + (time * 1000)) {
+        //if (randomPercentage() < percentage) {
+        //    performSwipe();
+        //}
+        await delay(7000);
+    }
+
+
 
     let swipeRightPercentage = 20;
-    randomSwipe(swipeRightPercentage);
+    //randomSwipe(swipeRightPercentage);
 
     // Check if the user SuperSwiped
     function hasSuperSwipe() {
@@ -59,15 +76,11 @@ function startSwiping(time, percentage) {
                 actionButtons[0].click();
             }
         } else {
-            console.error("Controls not found!");
+            console.log("Controls not found!");
         }
     }
 
 }
-
-// This will let the background know that the script has been loaded in this tab.
-chrome.runtime.sendMessage({ action: "checkScriptPresence", scriptPresent: true });
-
 
 
 
