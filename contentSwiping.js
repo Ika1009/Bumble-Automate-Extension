@@ -2,40 +2,41 @@ let time;
 let percentage;
 let started = false;
 let startTime;
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
     if (request.action === "initiateSwiping") {
         time = request.time;
         percentage = request.percentage;
         startTime = Date.now();
 
         //Start function if the first time
-        if(!started) startSwiping()
+        if(!started) await startSwiping()
     }    
     else if (request.action === "checkScriptPresence" && request.scriptName === "swipingScript") {
         sendResponse({ scriptPresent: true });
     }
 });
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function startSwiping() {
     started=true;
+
     // Your swiping logic here
     console.log("Swiping for: ", time, " seconds with percentage: ", percentage);
 
-    // Example pseudo-code:
     while (Date.now() < startTime + (time * 1000)) {
-        //if (randomPercentage() < percentage) {
-        //    performSwipe();
-        //}
-        await delay(7000);
+        if (randomPercentage() < 30) {
+            //30% chance to Scroll Down
+
+        }
+        randomSwipe();
+        await delay(5000);
     }
 
-
-
-    let swipeRightPercentage = 20;
-    //randomSwipe(swipeRightPercentage);
+    function randomPercentage(){
+        return Math.random() * 100;  // Generate a random number between 0 and 100
+    }
 
     // Check if the user SuperSwiped
     function hasSuperSwipe() {
@@ -54,7 +55,7 @@ async function startSwiping() {
     }
 
 
-    function randomSwipe(swipeRightPercentage) {
+    function randomSwipe() {
         let controls = document.getElementsByClassName("encounters-controls__actions");
         console.log(controls);
         if (controls.length > 0) {
@@ -67,12 +68,13 @@ async function startSwiping() {
                 return;
             }
 
-            let randomValue = Math.random() * 100;  // Generate a random number between 0 and 100
-            if (randomValue <= swipeRightPercentage) {
+            if (randomPercentage() <= percentage) {
                 // Swipe right
+                console.log("swipe right")
                 actionButtons[2].click();
             } else {
                 // Swipe left
+                console.log("swipe left")
                 actionButtons[0].click();
             }
         } else {
