@@ -1,0 +1,82 @@
+.container {
+    width: 200px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.options label {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.options input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#toggleSwitch {
+    width: 40px;
+    height: 20px;
+    background-color: #9b59b6;
+    margin: 15px auto 5px auto; /* adjusted margin for better spacing */
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden; /* This will ensure that the .circle stays within the boundaries */
+}
+
+#toggleSwitch .circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 1px;
+    transform: translateY(-50%); /* This will vertically center the circle */
+    transition: left 0.3s;
+}
+
+#toggleSwitch.active .circle {
+    left: calc(100% - 19px);
+}
+
+
+.download-btn-container {
+    margin-top: 10px;
+}
+
+.download-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: #9b59b6;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.download-btn:hover {
+    background-color: #8e44ad;
+}
+
+.disabled-input,
+.disabled-label {
+    color: #a0a0a0;  /* You can adjust this to your desired shade of gray */
+    pointer-events: none;
+}
+
+.disabled-input {
+    background-color: #cccccc;
+    border: 1px solid #cccccc;
+}
