@@ -1,10 +1,16 @@
+let count;
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "initiateMessaging") {
-        startMessaging(request.count);
+        count = request.count;
+        startMessaging();
+    }
+    else if (request.action === "checkScriptPresence" && request.scriptName === "messagingScript") {
+        sendResponse({ scriptPresent: true });
     }
 });
 
-function startMessaging(count) {
+function startMessaging() {
     // Your messaging logic here
     console.log("Sending messages to: ", count, " people.");
 
@@ -14,7 +20,4 @@ function startMessaging(count) {
     //     waitSomeTime();
     // }
 }
-
-// This will let the background know that the script has been loaded in this tab.
-chrome.runtime.sendMessage({ action: "checkScriptPresence", scriptPresent: true });
 
