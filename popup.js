@@ -10,13 +10,17 @@ function toggleSwitch() {
     const messageLabel = document.getElementById("messageLabel");
     const swipeInput = document.getElementById("swipeTime");
     const swipeLabel = document.getElementById("swipeLabel");
+    const swipeInput1 = document.getElementById("swipePercentage");
+    const swipeLabel1 = document.getElementById("swipePercentageLabel");
 
     if (swipeIsEnabled) {
         // When swipe is currently enabled:
         // Disable the "Seconds to Swipe" input and label
         swipeInput.disabled = true;
         swipeLabel.classList.add('disabled-label');
-
+        swipeInput1.disabled = true;
+        swipeLabel1.classList.add('disabled-label');
+        
         // Enable the "People to Message" input and label
         messageInput.disabled = false;
         messageLabel.classList.remove('disabled-label');
@@ -27,6 +31,8 @@ function toggleSwitch() {
         // Enable the "Seconds to Swipe" input and label
         swipeInput.disabled = false;
         swipeLabel.classList.remove('disabled-label');
+        swipeInput1.disabled = false;
+        swipeLabel1.classList.remove('disabled-label');
 
         // Disable the "People to Message" input and label
         messageInput.disabled = true;
@@ -43,12 +49,13 @@ function toggleSwitch() {
 document.getElementById("startAction").addEventListener("click", function() {
     const messageCountVal = messageCount.value;
     const swipeTimeVal = swipeTime.value;
+    const swipePercentageVal = swipePercentage.value;
 
     if (messageCountVal && !swipeIsEnabled) {
         chrome.runtime.sendMessage({action: "startMessaging", count: messageCountVal});
     }
-    else if(swipeTimeVal && swipeIsEnabled){
-        chrome.runtime.sendMessage({action: "startSwiping", time: swipeTimeVal});
+    else if(swipeTimeVal && swipePercentageVal && swipeIsEnabled){
+        chrome.runtime.sendMessage({action: "startSwiping", time: swipeTimeVal, percentage: swipePercentageVal});
     } else {
         alert("Please fill in the active field!");
     }
